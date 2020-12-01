@@ -1,14 +1,14 @@
 var fs=require("fs");
 exports.watch=function(){
-    fs.watchFile(__dirname+'/config.json', function (curr, prev) {
+    fs.watchFile(__dirname+'/settings.js', function (curr, prev) {
         reload_config();
     });
 };
 exports.unwatch=function(){
-    fs.unwatchFile(__dirname+'/config.json');
+    fs.unwatchFile(__dirname+'/settings.js');
 };
 function reload_config(){
-    var config_json=fs.readFileSync(__dirname+"/config.json",{encoding:'utf-8'});
+    var config_json=fs.readFileSync(__dirname+"/settings.js",{encoding:'utf-8'});
     try{
         var config=(eval(config_json));
     }catch(e){

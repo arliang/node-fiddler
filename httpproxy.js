@@ -371,7 +371,7 @@ exports.start=function(){
     httpsServer.listen(config.listen_https_port,config.listen_host);
     config.watch();
 
-    console.log("config:     "+__dirname+"/config.json");
+    console.log("config:     "+__dirname+"/settings.js");
     console.log("proxy:      "+config.listen_host+":"+config.listen_port);
     console.log("frontend:   http://"+config.listen_host+":"+config.listen_config_port);
 };

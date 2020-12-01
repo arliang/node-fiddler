@@ -7,8 +7,8 @@
 - 可以实现https的反向代理和内容劫持，但用的是不合法证书（可以用自己的合法证书替换）
 - 实现了http的connect方法
 
-# config.json介绍
-- 可以在proxy启动的状态下，改变config.json文件的内容，会自动生效
+# settings.js介绍
+- 可以在proxy启动的状态下，改变settings.js文件的内容，会自动生效
 ```javascript
 ({
     'listen_host':'127.0.0.1',

@@ -34,13 +34,7 @@
         //[/^http:\/\/www\.baidu\.com\/s/,'{_}?wd=qq'],
 
         //高级功能，走回调
-        /*
-        ["http://s1.bdstatic.com/r/www/cache/static/global/js/all_async_popstate_40a67976.js","{_}",function(code){
-            code+=";alert('testtest');";
             return code;
-        }],
-        */
-        
     ],
 })
 
