@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-expressions
 ({
     'listen_host':'127.0.0.1',
     'listen_port':'8083',

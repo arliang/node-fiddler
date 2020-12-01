@@ -21,7 +21,7 @@ exports.local_request=function local_request(bm,netType){
     var body="";
     if(typeof(getHeader("Content-Length"))!="undefined"){
         if(content_length+http_header_length<=bm.size()){
-            var body=bm.slice(http_header_length,content_length);
+            body=bm.slice(http_header_length,content_length);
             bm.delete(http_header_length+content_length);
         }else{
             return null;
@@ -52,18 +52,18 @@ exports.local_request=function local_request(bm,netType){
     }
     return {
         getCurlCmd:function(){
-            var cmd="curl \""+this.getUrl().href+"\"";
-            cmd+=" -X \""+this.getMethod().toLocaleUpperCase()+"\"";
+            var cmd=["curl \""+this.getUrl().href+"\""];
+            cmd.push(" -X \""+this.getMethod().toLocaleUpperCase()+"\"");
             var headers=this.getHeader();
             for(var h in headers){
                 if(headers.hasOwnProperty(h)){
-                    cmd+=" -H '"+h+":"+headers[h].replace("'","\\'")+"' ";
+                    cmd.push(" -H '"+h+":"+headers[h].replace("'","\\'")+"' ");
                 }
             }
             var body=this.getBody();
-            cmd+=" --data \""+body+"\"";
-            cmd+=" --compressed";
-            return cmd;
+            cmd.push(" --data \""+body+"\"");
+            cmd.push(" --compressed");
+            return cmd.join(' \\\\' + CRLF);
         },
         getBody:function(){
             return body;
@@ -71,11 +71,11 @@ exports.local_request=function local_request(bm,netType){
         getQueryString:(function(){
             var queryStr;
             return function(){
-                var tmp;
                 if(!queryStr){
                     queryStr=raw_header.substr(0,CRLF_index).split(/\s+/)[1];
                 }
-                if(tmp=queryStr.match(/^https?:\/\/[^/]*(.*)/)){
+                var tmp=queryStr.match(/^https?:\/\/[^/]*(.*)/)
+                if(tmp){
                     queryStr=tmp[1];
                 }
                 if(!queryStr){

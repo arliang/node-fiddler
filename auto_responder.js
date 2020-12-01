@@ -7,6 +7,7 @@ var log = require("./log").instance;
 var CRLF = "\r\n";
 var URL=require("url");
 var dataLogger=require('./front').dataLogger;
+var BufferManager = require('./buffermanager');
 
 
 function format(string,args){
@@ -22,7 +23,7 @@ function format(string,args){
         }   
     }   
     return str;
-};
+}
 
 function matchAutoResponder(request,socket){
     var rules=config.auto_responder;   
@@ -78,7 +79,7 @@ var strategy={
         dataLogger.data(request,"responseHeader",responseHeader);
 
         if(typeof callback=='function'){
-            var content=fs.readFileSync(filename, {encoding:'utf-8'});
+            var content=fs.readFileSync(file.name, {encoding:'utf-8'});
             content=callback(content);
             dataLogger.data(request,"response",content);
             socket.write(content);

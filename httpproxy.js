@@ -1,12 +1,9 @@
 "use strict";
 var net = require("net");
-var util=require("util");
-var URL=require("url");
 var DNS=require("dns");
 var tls = require('tls');
 var fs = require('fs');
 var log = require("./log").instance;
-var optparser = require("./optparser");
 var BufferManager=require('./buffermanager').BufferManager;
 var local_request=require('./request').local_request;
 var remote_response=require('./response').remote_response;
@@ -15,8 +12,6 @@ var dataLogger=frontend.dataLogger;
 var config=require("./config");
 var matchAutoResponder=require("./auto_responder").matchAutoResponder;
 
-var SERVER_CMD_START=[0x00,0x01];
-var SERVER_CMD_END=[0xfe,0xff];
 var DNSCache=config.DNSCache;
 //DNSCache['www.baidu.com']={addresses:['127.0.0.1']};
 
@@ -107,7 +102,8 @@ function create_remote_connecton(request,socket,netType) {
     //console.log(url);
     var remote_socket;
     //socket = net.createConnection(port, hostname);
-    if(remote_socket=get_cached_remote_connection(url)){
+    remote_socket=get_cached_remote_connection(url)
+    if(remote_socket){
         remote_socket.socket=socket;
         remote_socket.request=request;
         log.debug("restore remote connection from pool");
@@ -291,10 +287,9 @@ function createServerCallbackFunc(netType){//netType is tls or net
         });
         socket.on("data", function(buf) {
             log.debug("recievied local length: "+buf.length);
-            if(!this.bm){
-                var bm=this.bm=new BufferManager();
-            }else{
-                var bm=this.bm;
+            var bm=this.bm;
+            if(!bm){
+                bm=this.bm=new BufferManager();
             }
             bm.add(buf);
 

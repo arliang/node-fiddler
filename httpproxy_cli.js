@@ -1,6 +1,3 @@
-var Logger = require("./log");
-var log = new Logger(Logger.INFO);
-var optparser = require("./optparser");
 var net = require("net");
 var util=require("util");
 var BufferManager=require('./buffermanager').BufferManager;
@@ -36,7 +33,7 @@ var COMMAND_TABLE={
         },
     dnsshow:function(tokens){
             socket.on("data",function(buf){
-                res=parse_response(buf)
+                var res=parse_response(buf)
                 if(typeof res=='undefined'){
                     return;
                 }
@@ -82,9 +79,6 @@ rl.on('line', function(line) {
     process.exit(0);
 });
 
-function load_hosts(){
-
-}
 function command_end(){
     rl.prompt();
 }
