@@ -1,19 +1,19 @@
-Logger = require("./log");
-log = new Logger(Logger.INFO);
-optparser = require("./optparser");
-net = require("net");
-util=require("util");
-BufferManager=require('./buffermanager').BufferManager;
+var Logger = require("./log");
+var log = new Logger(Logger.INFO);
+var optparser = require("./optparser");
+var net = require("net");
+var util=require("util");
+var BufferManager=require('./buffermanager').BufferManager;
 
-SERVER_CMD_START=[0x00,0x01];
-SERVER_CMD_END=[0xfe,0xff];
+var SERVER_CMD_START=[0x00,0x01];
+var SERVER_CMD_END=[0xfe,0xff];
 
 var readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout),
     prefix = 'httpproxy> ';
 rl.setPrompt(prefix, prefix.length);
 
-socket=net.createConnection(8080,'127.0.0.1');
+var socket=net.createConnection(8080,'127.0.0.1');
 socket.on("connect",function(){
     rl.prompt();
 });
@@ -24,7 +24,7 @@ socket.on("close",function(){
     process.exit(255);
 });
 
-COMMAND_TABLE={
+var COMMAND_TABLE={
     list:function(){
             command_end();
         },
@@ -89,7 +89,7 @@ function command_end(){
     rl.prompt();
 }
 
-parse_response=(function(){
+var parse_response=(function(){
     var bm=new BufferManager();
     return function(buf){
         bm.add(buf);

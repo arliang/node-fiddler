@@ -1,11 +1,10 @@
+var Logger = require("./log");
+var log = new Logger(Logger.INFO);
+var assert=require('assert');
+var BufferManager=require("./buffermanager").BufferManager;
+var bm=new BufferManager(false,new Buffer('1234'),false,new Buffer('5678'),new Buffer("789"));
 
-Logger = require("./log");
-log = new Logger(Logger.INFO);
-assert=require('assert');
 assert.ok(true,"false!");
-BufferManager=require("./buffermanager").BufferManager;
-
-bm=new BufferManager(false,new Buffer('1234'),false,new Buffer('5678'),new Buffer("789"));
 assert.equal(bm.slice(1,3).toString(),'234');
 assert.equal(bm.toBuffer().toString(),'12345678789');
 assert.equal(bm.slice(3,2).toString(),'45');
