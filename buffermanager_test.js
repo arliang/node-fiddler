@@ -2,7 +2,7 @@ var Logger = require("./log");
 var log = new Logger(Logger.INFO);
 var assert=require('assert');
 var BufferManager=require("./buffermanager").BufferManager;
-var bm=new BufferManager(false,new Buffer('1234'),false,new Buffer('5678'),new Buffer("789"));
+var bm=new BufferManager(false,Buffer.from('1234'),false,Buffer.from('5678'),Buffer.from("789"));
 
 assert.ok(true,"false!");
 assert.equal(bm.slice(1,3).toString(),'234');
@@ -34,10 +34,10 @@ assert.equal(bm.indexOf('12345'),0);
 assert.equal(bm.indexOf('12345',1),-1);
 
 
-assert.deepEqual(new Buffer('aa'),new Buffer('aa'));
+assert.deepEqual(Buffer.from('aa'),Buffer.from('aa'));
 
 
-bm=new BufferManager(new Buffer('ab中国123'));
+bm=new BufferManager(Buffer.from('ab中国123'));
 assert.equal(bm.indexOf('国'),5);
 assert.equal(bm.indexOf('国',5),5);
 assert.equal(bm.indexOf('国',6),-1);

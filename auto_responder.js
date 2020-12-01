@@ -135,7 +135,7 @@ var strategy={
                 log.info("send to local");
                 var data=bm.slice(0);
                 if(typeof callback=='function'){
-                    data=new Buffer(callback(data.toString('utf-8')));
+                    data=Buffer.from(callback(data.toString('utf-8')));
                 }
                 if(!socket.is_end){
                     socket.write(['HTTP/1.1 200 OK',
@@ -208,7 +208,7 @@ var strategy={
                 log.info("send to local");
                 var data=bm.slice(0);
                 if(typeof callback=='function'){
-                    data=new Buffer(callback(data.toString('utf-8')));
+                    data=Buffer.from(callback(data.toString('utf-8')));
                 }
                 if(!socket.is_end){
                     socket.write(['HTTP/1.1 200 OK',
