@@ -163,6 +163,79 @@ var strategy={
         req.write(request.getBody());
         req.end();
         return true;
+    },
+    'https':function(file,socket,request,callback){
+        //var url=request.getUrl();
+        log.info('request http: ' + JSON.stringify(file));
+        var url=URL.parse(file.name);       
+        var headers={};
+        if(request.getHeader("Cookie")){
+            headers.cookie=request.getHeader("Cookie");
+        }
+        if(request.getHeader("Referer")){
+            headers.referer=request.getHeader("Referer");
+        }
+        if(request.getHeader("User-Agent")){
+            headers['user-agent']=request.getHeader("User-Agent");
+        }
+        if(request.getHeader("Host")){
+            headers['host']=request.getHeader("Host");
+        }
+        var options = {
+            headers:headers,
+            hostname: url.host.replace(/:[0-9]+$/,""),
+            port: url.port?url.port:80,
+            path: url.pathname+(url.search?url.search:""),
+            method: request.getMethod()
+        };
+        log.info('options: ' + JSON.stringify(options));
+
+        var req = http.request(options, function(res) {
+            log.info('STATUS: ' + res.statusCode);
+            log.info('HEADERS: ' + JSON.stringify(res.headers));
+            res.setEncoding('utf8');
+            var bm=new BufferManager();
+            res.on('data', function (chunk) {
+                //console.log('BODY: ' + chunk);
+                bm.add(chunk);
+            });
+
+            socket.on("end", function() {
+                //client aborted
+                socket.is_end=true;
+            });
+            function send_to_local(){
+                log.info("send to local");
+                var data=bm.slice(0);
+                if(typeof callback=='function'){
+                    data=new Buffer(callback(data.toString('utf-8')));
+                }
+                if(!socket.is_end){
+                    socket.write(['HTTP/1.1 200 OK',
+                            'Content-Type: '+res.headers['content-type'],//get_content_type(file.name),
+                            'Cache-Control: private',
+                            'Content-Length: '+data.length].join(CRLF)+CRLF+CRLF);
+                    socket.write(data);
+                }
+                ///TODO  should tell dataLogger, if socket.is_end
+                dataLogger.data(request,"responseHeader",JSON.stringify(res.headers));
+                dataLogger.data(request,"response",data);
+            }
+            res.on("end",send_to_local);
+            res.on("close",function(){
+                socket.end();
+                socket.destroy();
+            });
+        });
+
+        req.on('error', function(e) {
+            log.error('problem with request: ' + e.message);
+        });
+
+        // write data to request body
+        req.write(request.getBody());
+        req.end();
+        return true;
     }
 };
 
